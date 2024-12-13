@@ -11,4 +11,8 @@ if (!elm) {
 }
 
 const root = ReactDOM.createRoot(elm);
-root.render(<App />); 
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+); 

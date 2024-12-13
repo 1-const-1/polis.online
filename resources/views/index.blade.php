@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  @csrf
   <title>Document</title>
   @viteReactRefresh
-  @vite(['resources/ts/index.tsx'])
+  @vite(['resources/ts/root.tsx'])
 </head>
 <body>
   <div id="root"></div>
