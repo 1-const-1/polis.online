@@ -42,6 +42,7 @@ const handleFormSubmission = async (
     if (!res.ok) {
       throw new Error(`Unsuccessful response. Status: ${res.status}`);
     }
+
   } catch (err) {
     console.error(`Error during form submission: ${err}`);
   }

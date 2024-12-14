@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   @csrf
-  <title>Document</title>
+  <title>Auth</title>
   @viteReactRefresh
   @vite(['resources/ts/root.tsx'])
 </head>

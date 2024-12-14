@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,6 +26,25 @@ class OnLogin extends Controller
 			return ["msg" => "Incorrect credentials"];
     }
 
-		header(sprintf("Authorization: Bearer %s", JWT::create(env("JWT_ALG"), $user, env("JWT_SECRET"))));
+		$ch = curl_init(env("APP_URL") . "/token");
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			"Authorization: Bearer " . $req->cookie("JWT_TOKEN"),
+		]); 
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["sub" => "user", "login" => $user->login]));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$res = curl_exec($ch);
+		curl_close($ch);
+
+		$jwt = json_decode($res);
+
+		if ($jwt->token) {
+			$cookie = Cookie::make("JWT_TOKEN", $jwt->token, 3, "/", null, null, 1);
+			return response($res)->withCookie($cookie);
+		}
+
+		return response($res);
+
   }   
 }
