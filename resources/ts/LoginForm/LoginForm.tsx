@@ -5,6 +5,17 @@ import PassField_2 from "./PassField_2";
 
 import "../../sass/LoginForm/LoginForm.sass";
 
+/**
+ * Функция для отправки данных формы по указанному URI.
+ * 
+ * Эта функция проверяет данные формы, валидирует их с помощью предоставленного валидатора,
+ * и отправляет данные на сервер.
+ * 
+ * @param form HTML форма, данные которой будут отправлены.
+ * @param url URI адрес, по которому будет отправлен запрос.
+ * @param validator Функция, которая проверяет, соответствуют ли данные определённым критериям.
+ * @returns Промис, который разрешается после отправки данных на сервер.
+ */
 const handleFormSubmission = async (
   form: HTMLFormElement, 
   url: string,
@@ -48,29 +59,55 @@ const handleFormSubmission = async (
   }
 }
 
+/**
+ * Функция для обработки отправки формы в режиме входа.
+ * 
+ * Эта функция передаёт данные формы на сервер по URI "/login".
+ * Проверяется, что поле "login" не пустое перед отправкой.
+ * 
+ * @param form HTML форма, данные которой будут отправлены.
+ * @returns Промис, который разрешается после отправки данных на сервер.
+ */
 const onLogin = (form: HTMLFormElement) => 
   handleFormSubmission(form, "/login", (data) => !!data["login"]);
 
+/**
+ * Функция для обработки отправки формы в режиме регистрации.
+ * 
+ * Эта функция передаёт данные формы на сервер по URI "/signup".
+ * Проверяется, что поля "login" и "pass" заполнены, и что пароль и повторный пароль совпадают.
+ * 
+ * @param form HTML форма, данные которой будут отправлены.
+ * @returns Промис, который разрешается после отправки данных на сервер.
+ */
 const onSignup = (form: HTMLFormElement) => 
   handleFormSubmission(form, "/signup", (data) => !!data["login"] && data["pass"] === data["rpass"]);
 
 const LoginForm: React.FC<{}> = () => {
 
-const loginMsg = "If you have an account";
-const signupMsg = "If you don't have one";
+const loginMsg = "При наличии аккаунта";
+const signupMsg = "Если впервые, то";
 
-const ctxLogin = "Log in";
-const ctxSignup = "Sign up";
+const ctxLogin = "Войти";
+const ctxSignup = "Создать";
 
 const [pass, setPass] = React.useState("");
 const [loginMode, setLoginMode] = React.useState(false);
 
+/**
+ * Обработчик отправки формы. В зависимости от режима, отправляет данные либо на вход, либо на регистрацию.
+ * 
+ * @param e Событие отправки формы.
+ */
 const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
   e.preventDefault();
   const form = e.target as HTMLFormElement;
   !loginMode ? onSignup(form) : onLogin(form);
 }
 
+/**
+ * Переключает между режимами входа и регистрации.
+ */
 const handleSpanClick = (): void => {
   setLoginMode(!loginMode);
 }
