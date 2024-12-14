@@ -1,38 +1,101 @@
-.form-cnt
+.form-cnt 
   width: 100%
   height: 100%
   display: flex
   align-items: center
   justify-content: center
 
-  
+
 .login-form 
   display: flex
   flex-direction: column
-  align-items: center
-  justify-content: center
-  padding: 32px
+  padding: 64px 32px
   user-select: none
-  width: 240px
+  background-color: #fefefe
+  box-shadow: 0 0 12px rgba(16, 16, 16, 0.18) // Slightly softened shadow
+  border-radius: 16px
+  width: 400px // Adjust width for more consistent form layout
+  max-width: 100%
+  overflow: hidden // Ensures no content overflows
+
+  .err-msg 
+    width: 100%
+    font-size: 0.85rem // Slightly increased for readability
+    color: #d32f2f
+    margin-top: 8px
+    word-break: break-word
+    text-align: center
   
-  & > div
+
+  & > div 
     display: flex
     flex-direction: column
     justify-content: center
-    align-items: flex-start
+    align-items: stretch
+    width: 100%
+    margin: 8px 0
+  
+  label
+    margin-bottom: 8px
 
-  .login-mode
+  input 
+    display: inline-block
+    padding: 16px
+    outline: none
+    background-color: #dadada30
+    border: 1px solid #ccc // Added subtle border for better input appearance
+    border-radius: 8px
+    font-size: 1rem // Ensuring text inside inputs is legible
+    transition: all 0.3s ease
+
+    &:focus 
+      border-color: #00e646 // Focus color to highlight input
+      box-shadow: 0 0 4px #00e646 // Adding a soft focus effect
+    
+  
+
+  .login-mode 
     display: flex
-    flex-direction: row
     justify-content: center
     align-items: center
+    margin-top: 16px
 
-    & > span
+    & > span 
+      margin: 0 4px
       cursor: pointer
+      color: #00e646
+      font-weight: 500
+      transition: color 0.3s ease
 
-  .login-submit
-    width: 100%
+      &:hover 
+        color: #00b338 // Darker green on hover
+      
+    
+  
 
-    input
+  .login-submit 
+    margin-top: 16px
+
+    & > input 
       width: 100%
+      background-color: #00e646
+      color: #fefefe
+      font-weight: 600
+      padding: 16px
+      border: none
+      border-radius: 8px
       cursor: pointer
+      transition: background-color 0.3s ease
+
+      &:hover 
+        background-color: #00b338 // Darker green on hover
+      
+    
+  
+
+  & > :first-child 
+    padding: 16px 0
+    display: flex
+    justify-content: center
+    align-items: center
+  

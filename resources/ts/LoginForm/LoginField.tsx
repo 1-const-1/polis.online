@@ -38,7 +38,7 @@ const LoginField: React.FC<{}> = () => {
           name="login" 
           onChange={handleChange}/>
       </div>
-      {isErr && <div>{errMsg}</div>}
+      {isErr && <div className="err-msg">{errMsg}</div>}
     </>
   );
 }

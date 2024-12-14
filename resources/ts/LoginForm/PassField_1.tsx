@@ -69,7 +69,7 @@ const PassField_1: React.FC<{
           onChange={handleChange}
           minLength={minLen}/>
       </div>
-      {isErr && <div>{errMsg}</div>}
+      {isErr && <div className="err-msg">{errMsg}</div>}
     </>
   );
 }

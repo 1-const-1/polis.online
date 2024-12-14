@@ -85,8 +85,8 @@ const onSignup = (form: HTMLFormElement) =>
 
 const LoginForm: React.FC<{}> = () => {
 
-const loginMsg = "При наличии аккаунта";
-const signupMsg = "Если впервые, то";
+const loginMsg = "Если учетная запись существует";
+const signupMsg = "Создать учетную запись";
 
 const ctxLogin = "Войти";
 const ctxSignup = "Создать";
@@ -118,6 +118,8 @@ return (
     id="l-form"
     className="login-form"
     onSubmit={handleFormSubmit}>
+
+    <div><img width={228} height={34} src="https://polis.online/img/logo.svg" alt="_logo" /></div>
 
     <LoginField />
 
