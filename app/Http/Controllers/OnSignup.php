@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
@@ -10,40 +11,56 @@ use Illuminate\Support\Facades\Hash;
 class OnSignup extends Controller
 {
 	public function signup (Request $req) {
-		$d = json_decode($req->getContent());
+    $data = $req->validate([
+			'login' => 'required|string',
+			'pass' => 'required|string'
+		]);
 
-		$user = DB::select("SELECT * FROM users WHERE login='$d->login'");
-		if (count($user)) {
-			return ["msg" => "user exists"];
+		$user = DB::table('users')->where('login', '=', $data['login'])->first();
+
+		if ($user) {
+			return response()->json(['msg' => 'User exists'], 401);
 		}
 
-		$bhash = Hash::make($d->pass);
+		$hashedPass = Hash::make($data['pass']);
 
-		DB::insert("INSERT INTO users (login, password, created_at, updated_at) VALUES (?, ?, ?, ?)", [$d->login, $bhash, date("Y-m-d H:i:s", time()), date("Y-m-d H:i:s", time())]);
+		DB::table("users")->insert([
+			'login' => $data['login'],
+			'password' => $hashedPass,
+			'created_at' => now(),
+			'updated_at' => now(),
+		]);
 
-		$user = DB::select("SELECT * FROM users WHERE login='$d->login'");
+		try {
 
-		$user = $user[0];
+			$client = new Client();
+			$res = $client->post(env('APP_URL') . '/token', [
+				'headers' => [
+					'Authorization' => 'Bearer ' . $req->cookie('JWT_TOKEN'),
+					'Content-Type' => 'application/json',
+				],
+				'json' => [
+					'sub' => 'user',
+					'login' => $data['login'],
+				]
+			]);
 
-		$ch = curl_init(env("APP_URL") . "/token");
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			"Authorization: Bearer " . $req->cookie("JWT_TOKEN"),
-		]); 
-		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["sub" => "user", "login" => $user->login]));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$jwt = json_decode($res->getBody()->getContents());
 
-		$res = curl_exec($ch);
-		curl_close($ch);
+			if (!isset($jwt->token)) {
+				return response()->json($jwt);
+			}
 
-		$jwt = json_decode($res);
+			return response()->json($jwt)->withCookie(Cookie::make('JWT_TOKEN', $jwt->token, 3, '/', null, null, 1));
 
-		if ($jwt->token) {
-			$cookie = Cookie::make("JWT_TOKEN", $jwt->token, 3, "/", null, null, 1);
-			return response($res)->withCookie($cookie);
+		} catch (\Exception $e) {
+
+			return response()->json([
+				'status' => 'error',
+				'message' => $e->getMessage(),
+			], 500);
+
 		}
-
-		return response($res);
 
 	}
 }	

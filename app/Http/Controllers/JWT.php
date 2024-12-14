@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 class JWT extends Controller
 {
 	public ?string $token = null; 
-	private ?string $iss = null;
-	private int $iat = 0;
-	private int $exp = 0;
+	public ?string $iss = null;
+	public int $iat = 0;
+	public int $exp = 0;
 
 	public function create(array $payload, string $alg = "sha256", ?string $secret = ""): void {
 		if (!is_null($this->iss)) {
@@ -61,7 +61,7 @@ class JWT extends Controller
 
 	static public function isExpired (string $jwt) {
 		$p = self::getPayload($jwt);
-		return ($p->exp ?? 0) > time();
+		return ($p->exp ?? 0) < time();
 	}
 
 }
